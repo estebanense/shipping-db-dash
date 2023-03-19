@@ -8,8 +8,8 @@ data = (
     .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
     .sort_values(by="Date")
 )
-regions = data["R_Cntry"].sort_values().unique()
-avocado_types = data["type"].sort_values().unique()
+regions = data["region"].sort_values().unique()
+types = data["type"].sort_values().unique()
 
 external_stylesheets = [
     {
@@ -21,7 +21,7 @@ external_stylesheets = [
     },
 ]
 app = Dash(__name__, external_stylesheets=external_stylesheets)
-app.title = "Shipping Analytics"
+app.title = "Shipping Database"
 
 app.layout = html.Div(
     children=[
@@ -29,7 +29,7 @@ app.layout = html.Div(
             children=[
                 html.P(children="", className="header-emoji"),
                 html.H1(
-                    children="Shipping Analytics", className="header-title"
+                    children="Shipping Databse", className="header-title"
                 ),
                 html.P(
                     children=(
@@ -45,14 +45,14 @@ app.layout = html.Div(
             children=[
                 html.Div(
                     children=[
-                        html.Div(children="S_City", className="menu-title"),
+                        html.Div(children="region", className="menu-title"),
                         dcc.Dropdown(
                             id="region-filter",
                             options=[
                                 {"label": region, "value": region}
                                 for region in regions
                             ],
-                            value="AG",
+                            value="US",
                             clearable=False,
                             className="dropdown",
                         ),
@@ -65,10 +65,10 @@ app.layout = html.Div(
                             id="type-filter",
                             options=[
                                 {
-                                    "label": avocado_type.title(),
-                                    "value": avocado_type,
+                                    "label": type.title(),
+                                    "value": type,
                                 }
-                                for avocado_type in avocado_types
+                                for type in types
                             ],
                             value="Collect",
                             clearable=False,
@@ -124,23 +124,23 @@ app.layout = html.Div(
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
 )
-def update_charts(region, avocado_type, start_date, end_date):
+def update_charts(region, type, start_date, end_date):
     filtered_data = data.query(
-        "region == @region and type == @avocado_type"
+        "region == @region and type == @type"
         " and Date >= @start_date and Date <= @end_date"
     )
     price_chart_figure = {
         "data": [
             {
                 "x": filtered_data["Date"],
-                "y": filtered_data["Tot_net"],
+                "y": filtered_data["neto"],
                 "type": "lines",
                 "hovertemplate": "$%{y:.2f}<extra></extra>",
             },
         ],
         "layout": {
             "title": {
-                "text": "Average Price ",
+                "text": "Net Price ",
                 "x": 0.05,
                 "xanchor": "left",
             },
@@ -154,12 +154,12 @@ def update_charts(region, avocado_type, start_date, end_date):
         "data": [
             {
                 "x": filtered_data["Date"],
-                "y": filtered_data["Total Volume"],
+                "y": filtered_data["Pkgs"],
                 "type": "lines",
             },
         ],
         "layout": {
-            "title": {"text": "Avocados Sold", "x": 0.05, "xanchor": "left"},
+            "title": {"text": "Total pkgs", "x": 0.05, "xanchor": "left"},
             "xaxis": {"fixedrange": True},
             "yaxis": {"fixedrange": True},
             "colorway": ["#E12D39"],
