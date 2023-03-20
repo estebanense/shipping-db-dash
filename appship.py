@@ -28,7 +28,7 @@ app.layout = html.Div(
     children=[
         html.Div(
             children=[
-                html.P(children="", className="header-emoji"),
+                html.P(children="logo_circulo", className="header-emoji"),
                 html.H1(
                     children="Shipping Database", className="header-title"
                 ),
@@ -165,12 +165,13 @@ def update_charts(region, type, start_date, end_date):
                 "x": filtered_data["Date"],
                 "y": filtered_data["Pkgs"],
                 "type": "lines",
+                "hovertemplate": "%{y:.2f}<extra></extra>",
             },
         ],
         "layout": {
             "title": {"text": "Total pkgs", "x": 0.05, "xanchor": "left"},
             "xaxis": {"fixedrange": True},
-            "yaxis": {"fixedrange": True},
+            "yaxis": {"tickprefix": "Pkgs ","fixedrange": True},
             "colorway": ["#E12D39"],
         },
     }
@@ -180,12 +181,13 @@ def update_charts(region, type, start_date, end_date):
                 "x": filtered_data["Date"],
                 "y": filtered_data["Bill_Wgt"],
                 "type": "lines",
+                "hovertemplate": "%{y:.2f}<extra></extra>",
             },
         ],
         "layout": {
             "title": {"text": "Bill Weight", "x": 0.05, "xanchor": "left"},
             "xaxis": {"fixedrange": True},
-            "yaxis": {"fixedrange": True},
+            "yaxis": {"tickprefix": "Lbs ","fixedrange": True},
             "colorway": ["blue"],
         },
     }
