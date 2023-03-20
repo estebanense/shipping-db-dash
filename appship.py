@@ -111,6 +111,13 @@ app.layout = html.Div(
                     ),
                     className="card",
                 ),
+                html.Div(
+                    children=dcc.Graph(
+                        id="weight-chart",
+                        config={"displayModeBar": False},
+                    ),
+                    className="card",
+                ),
             ],
             className="wrapper",
         ),
@@ -120,6 +127,7 @@ app.layout = html.Div(
 @app.callback(
     Output("price-chart", "figure"),
     Output("volume-chart", "figure"),
+    Output("weight-chart", "figure"),
     Input("region-filter", "value"),
     Input("type-filter", "value"),
     Input("date-range", "start_date"),
@@ -166,7 +174,22 @@ def update_charts(region, type, start_date, end_date):
             "colorway": ["#E12D39"],
         },
     }
-    return price_chart_figure, volume_chart_figure
+    weight_chart_figure = {
+        "data": [
+            {
+                "x": filtered_data["Date"],
+                "y": filtered_data["Bill_Wgt"],
+                "type": "lines",
+            },
+        ],
+        "layout": {
+            "title": {"text": "Bill Weight", "x": 0.05, "xanchor": "left"},
+            "xaxis": {"fixedrange": True},
+            "yaxis": {"fixedrange": True},
+            "colorway": ["blue"],
+        },
+    }
+    return price_chart_figure, volume_chart_figure, weight_chart_figure
 
 if __name__ == "__main__":
     app.run_server(debug=True)
