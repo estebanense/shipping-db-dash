@@ -3,6 +3,9 @@
 import pandas as pd
 from dash import Dash, Input, Output, dcc, html
 
+logo = "../shipping-db-dash/assets/logo_circulo.png"
+
+
 data = (
     pd.read_csv("shipping.csv")
     .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
@@ -28,7 +31,7 @@ app.layout = html.Div(
     children=[
         html.Div(
             children=[
-                html.P(children="logo_circulo", className="header-emoji"),
+                html.P(children=logo, className="header-emoji"),
                 html.H1(
                     children="Shipping Database", className="header-title"
                 ),
