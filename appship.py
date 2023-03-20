@@ -8,10 +8,11 @@ data = (
     .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
     .sort_values(by="Date")
 )
-regions = data["region"].sort_values().unique()
-types = data["type"].sort_values().unique()
+regions = data["R_State"].sort_values().unique()
+types = data["Source"].sort_values().unique()
 
 external_stylesheets = [
+
     {
         "href": (
             "https://fonts.googleapis.com/css2?"
@@ -29,7 +30,7 @@ app.layout = html.Div(
             children=[
                 html.P(children="", className="header-emoji"),
                 html.H1(
-                    children="Shipping Databse", className="header-title"
+                    children="Shipping Database", className="header-title"
                 ),
                 html.P(
                     children=(
@@ -45,14 +46,14 @@ app.layout = html.Div(
             children=[
                 html.Div(
                     children=[
-                        html.Div(children="region", className="menu-title"),
+                        html.Div(children="R_State", className="menu-title"),
                         dcc.Dropdown(
                             id="region-filter",
                             options=[
-                                {"label": region, "value": region}
+                                {"label": region.title(), "value": region}
                                 for region in regions
                             ],
-                            value="US",
+                            value="CA",
                             clearable=False,
                             className="dropdown",
                         ),
@@ -60,7 +61,7 @@ app.layout = html.Div(
                 ),
                 html.Div(
                     children=[
-                        html.Div(children="Source_Area", className="menu-title"),
+                        html.Div(children="Source", className="menu-title"),
                         dcc.Dropdown(
                             id="type-filter",
                             options=[
@@ -126,7 +127,7 @@ app.layout = html.Div(
 )
 def update_charts(region, type, start_date, end_date):
     filtered_data = data.query(
-        "region == @region and type == @type"
+        "R_State == @region and Source == @type"
         " and Date >= @start_date and Date <= @end_date"
     )
     price_chart_figure = {
